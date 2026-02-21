@@ -4,6 +4,23 @@
 
 Build a **Backup Data Integrity** dashboard that visualizes time-series backup data chunks in an interactive heatmap grid. Users can view chunk density, select chunks, and perform download and delete operations.
 
+## The Story
+
+A network security appliance (firewall) continuously collects traffic logs. These logs are generated in real time — hundreds, sometimes thousands of records per second. Storing all of this data in a single large file would be problematic for both performance and manageability: the file grows indefinitely, downloading it takes hours, and a single corruption could compromise all the data.
+
+That's why the data is **split into minute-based chunks**. Each chunk stores all records from that minute as a compressed package. This approach provides:
+
+- **Granular management:** Download, delete, or verify only the time range you need
+- **Damage isolation:** If one chunk is corrupted, only 1 minute of data is affected — the rest remains intact
+- **Parallel processing:** Multiple chunks can be downloaded or verified simultaneously
+- **Efficient storage:** Each chunk is independently compressed
+
+This produces **1,440 chunks per day** (24 hours x 60 minutes). As a security administrator, you need to monitor the integrity of these chunks: Which hours had heavy traffic? Are there any gaps? Do you need to download or delete specific chunks?
+
+Your task is to build a dashboard that displays the entire day's chunks as a **calendar-style heatmap** — similar in concept to [GitHub's contribution graph](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/managing-contribution-settings-on-your-profile/viewing-contributions-on-your-profile), but organized by hours and minutes instead of months and days. Darker cells represent high-traffic periods, lighter cells represent low traffic, and empty cells indicate minutes with no data. The administrator can select chunks and perform bulk operations: download or delete.
+
+**The UI design is entirely up to you.** Use Nuxt UI components creatively to build a clean, functional interface. We want to see your design thinking, not a copy of an existing layout.
+
 ## Tech Stack (Required)
 
 | Technology | Version |
@@ -70,29 +87,6 @@ Display at the bottom of the page:
 - Total Chunks (e.g., "1,440")
 - Size On Disk (e.g., "167.54 MB")
 - Color scale indicator (Less → More)
-
-## Page Layout
-
-```
-+----------------------------------------------------------+
-| Backup Data Integrity                                     |
-+----------------------------------------------------------+
-| [Select All]                    [Download(0)] [Delete(0)] |
-+----------------------------------------------------------+
-|                                                           |
-| 0:00                              42.3K / 6.00 MB  3.58% |
-| [██][██][▓▓][▓▓][▒▒][░░][██]... (60 cells)              |
-|                                                           |
-| 1:00                              42.5K / 6.01 MB  3.59% |
-| [██][▓▓][▓▓][▒▒][░░][██][▓▓]... (60 cells)              |
-|                                                           |
-| ...  (24 hourly groups, scrollable)                       |
-|                                                           |
-+----------------------------------------------------------+
-| Total: 1.2M records | 1,440 chunks | 167.54 MB           |
-| Less [■■■■■■■■] More                                     |
-+----------------------------------------------------------+
-```
 
 ## API Contracts
 
