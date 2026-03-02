@@ -191,9 +191,9 @@ const downloadOpen = ref(false)
 const deleteOpen   = ref(false)
 
 const dataDate = computed(() => {
-  if (!store.data?.groups.length) return ''
-  const { year, month, day } = store.data.groups[0].date
-  return new Date(year, month - 1, day).toLocaleDateString('en-US', {
+  const d = store.data?.groups[0]?.date
+  if (!d) return ''
+  return new Date(d.year, d.month - 1, d.day).toLocaleDateString('en-US', {
     weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
   })
 })
