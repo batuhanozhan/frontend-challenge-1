@@ -10,6 +10,7 @@
 
     <!-- Right: color scale legend -->
     <div class="scale-legend">
+      <span class="scale-metric">Records / chunk</span>
       <span class="scale-label">Less</span>
       <div class="scale-swatches">
         <div
@@ -80,6 +81,15 @@ const stats = computed(() => {
   display:     flex;
   align-items: center;
   gap:         8px;
+}
+
+.scale-metric {
+  font-size:   10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color:       var(--ui-text-dimmed);
+  margin-right: 4px;
 }
 
 .scale-label {
