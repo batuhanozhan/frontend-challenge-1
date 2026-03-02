@@ -267,7 +267,7 @@ function showTooltip(bucket: Bucket, event: MouseEvent) {
 }
 
 .cell.is-selected {
-  box-shadow: 0 0 0 2px rgb(16, 185, 129);
+  box-shadow: inset 0 0 0 2px rgb(16, 185, 129);
   z-index:    2;
 }
 
