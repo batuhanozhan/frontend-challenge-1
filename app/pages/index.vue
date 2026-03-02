@@ -1,9 +1,51 @@
 <template>
   <div class="px-1 flex flex-col gap-4">
 
-    <!-- ── Loading ─────────────────────────────────────────────── -->
-    <div v-if="store.loading" class="flex items-center justify-center py-24">
-      <UIcon name="i-heroicons-arrow-path" class="w-6 h-6 text-muted animate-spin" />
+    <!-- ── Skeleton ────────────────────────────────────────────── -->
+    <div
+      v-if="store.loading"
+      class="bg-panel rounded-2xl border border-panel-border overflow-hidden [box-shadow:var(--panel-shadow)]"
+    >
+      <!-- Toolbar -->
+      <div class="flex items-center px-6 py-3 border-b border-panel-divider gap-2">
+        <USkeleton class="w-[15px] h-[15px] rounded-sm flex-shrink-0" />
+        <USkeleton class="w-[72px] h-3 rounded-full" />
+      </div>
+
+      <!-- Grid -->
+      <div class="px-6 py-5">
+        <!-- Minute axis row -->
+        <div class="flex items-center gap-[10px] px-1 mb-1.5">
+          <div class="w-[66px] flex-shrink-0" />
+          <USkeleton class="flex-1 h-[10px] rounded-full" />
+          <div class="w-[195px] flex-shrink-0" />
+        </div>
+
+        <!-- 24 hour rows -->
+        <div class="flex flex-col gap-[2px]">
+          <div
+            v-for="i in 24"
+            :key="i"
+            class="flex items-center gap-[10px] px-1 py-[2px]"
+          >
+            <USkeleton class="w-4 h-4 rounded-sm flex-shrink-0" />
+            <USkeleton class="w-[40px] h-[11px] rounded-full flex-shrink-0" />
+            <USkeleton class="flex-1 h-4 rounded" />
+            <USkeleton class="w-[195px] h-[11px] rounded-full flex-shrink-0" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="flex items-center justify-between px-6 py-[14px] border-t border-panel-divider">
+        <div class="flex items-center gap-8">
+          <div v-for="i in 4" :key="i" class="flex flex-col gap-[3px]">
+            <USkeleton class="w-16 h-[10px] rounded-full" />
+            <USkeleton class="w-12 h-[15px] rounded" />
+          </div>
+        </div>
+        <USkeleton class="w-[148px] h-4 rounded" />
+      </div>
     </div>
 
     <!-- ── Error ───────────────────────────────────────────────── -->
@@ -23,10 +65,18 @@
         <div class="flex items-center gap-3">
           <button
             class="flex items-center gap-2 group"
+            :disabled="store.isSelecting"
             @click="store.toggleSelectAll()"
           >
-            <!-- Custom checkbox indicator -->
+            <!-- Spinner while bulk-selecting -->
+            <UIcon
+              v-if="store.isSelecting"
+              name="i-heroicons-arrow-path"
+              class="w-[15px] h-[15px] text-muted animate-spin flex-shrink-0"
+            />
+            <!-- Normal checkbox indicator -->
             <div
+              v-else
               class="select-toggle"
               :class="{
                 'is-full':    store.isAllSelected,
@@ -41,14 +91,15 @@
             <span class="text-xs font-medium text-muted group-hover:text-highlighted transition-colors">
               Select All
             </span>
-            <span v-if="store.selectedCount > 0" class="text-xs text-dimmed">
+            <span v-if="store.selectedCount > 0 && !store.isSelecting" class="text-xs text-dimmed">
               ({{ store.selectedCount.toLocaleString() }})
             </span>
           </button>
 
           <button
             v-if="store.selectedCount > 0"
-            class="flex items-center gap-1 text-xs text-dimmed hover:text-highlighted transition-colors"
+            class="flex items-center gap-1 text-xs text-dimmed hover:text-highlighted transition-colors disabled:pointer-events-none disabled:opacity-40"
+            :disabled="store.isSelecting"
             @click="store.clearSelection()"
           >
             <UIcon name="i-heroicons-x-mark" class="w-3.5 h-3.5" />
@@ -62,6 +113,7 @@
             size="xs"
             variant="soft"
             color="neutral"
+            :disabled="store.isSelecting"
             @click="downloadOpen = true"
           >
             Download ({{ store.selectedCount }})
@@ -70,6 +122,7 @@
             size="xs"
             variant="soft"
             color="error"
+            :disabled="store.isSelecting"
             @click="deleteOpen = true"
           >
             Delete ({{ store.selectedCount }})
@@ -77,9 +130,20 @@
         </div>
       </div>
 
-      <!-- Heatmap grid -->
-      <div class="px-6 py-5">
-        <HeatmapGrid />
+      <!-- Heatmap grid — overlay while bulk-selecting -->
+      <div class="relative px-6 py-5">
+        <HeatmapGrid :class="{ 'opacity-40 pointer-events-none': store.isSelecting }" />
+        <Transition name="fade">
+          <div
+            v-if="store.isSelecting"
+            class="absolute inset-0 flex items-center justify-center"
+          >
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-panel border border-panel-border [box-shadow:var(--panel-shadow)]">
+              <UIcon name="i-heroicons-arrow-path" class="w-3.5 h-3.5 text-muted animate-spin" />
+              <span class="text-xs text-muted">Updating…</span>
+            </div>
+          </div>
+        </Transition>
       </div>
 
       <!-- Footer statistics -->
@@ -102,6 +166,12 @@ onMounted(() => store.fetchChunks())
 </script>
 
 <style scoped>
+/* ── Loading overlay transition ──────────────────────────────── */
+.fade-enter-active,
+.fade-leave-active { transition: opacity 120ms ease; }
+.fade-enter-from,
+.fade-leave-to      { opacity: 0; }
+
 /* ── Toolbar Select-All toggle ───────────────────────────────── */
 .select-toggle {
   width:         15px;
