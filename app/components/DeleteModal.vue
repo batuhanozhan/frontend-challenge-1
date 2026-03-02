@@ -10,8 +10,8 @@
         <div
           class="flex items-start gap-3 rounded-xl p-4"
           :class="result.status === 'completed'
-            ? 'bg-emerald-50 border border-emerald-200'
-            : 'bg-red-50 border border-red-200'"
+            ? 'bg-emerald-50 border border-emerald-200 dark:bg-emerald-950 dark:border-emerald-800'
+            : 'bg-red-50 border border-red-200 dark:bg-red-950 dark:border-red-900'"
         >
           <UIcon
             :name="result.status === 'completed' ? 'i-heroicons-check-circle' : 'i-heroicons-x-circle'"
@@ -21,7 +21,7 @@
           <div>
             <p
               class="text-sm font-medium"
-              :class="result.status === 'completed' ? 'text-emerald-700' : 'text-red-700'"
+              :class="result.status === 'completed' ? 'text-emerald-700 dark:text-emerald-300' : 'text-red-700 dark:text-red-400'"
             >
               {{ result.status === 'completed' ? 'Deletion successful' : 'Deletion failed' }}
             </p>
@@ -33,11 +33,11 @@
       <!-- Confirmation state -->
       <div v-else class="space-y-4">
         <!-- Warning banner -->
-        <div class="flex items-start gap-3 rounded-xl bg-red-50 border border-red-200 p-4">
+        <div class="flex items-start gap-3 rounded-xl bg-red-50 border border-red-200 dark:bg-red-950 dark:border-red-900 p-4">
           <UIcon name="i-heroicons-exclamation-triangle" class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
           <div>
-            <p class="text-sm font-semibold text-red-700">This action is irreversible</p>
-            <p class="text-xs text-red-600/80 mt-1 leading-relaxed">
+            <p class="text-sm font-semibold text-red-700 dark:text-red-400">This action is irreversible</p>
+            <p class="text-xs text-red-600/80 dark:text-red-500/80 mt-1 leading-relaxed">
               The selected chunks will be permanently deleted and cannot be recovered.
             </p>
           </div>

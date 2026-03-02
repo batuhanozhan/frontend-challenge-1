@@ -13,8 +13,8 @@
       </div>
 
       <!-- Error -->
-      <div v-else-if="error" class="rounded-xl bg-red-50 border border-red-200 p-4">
-        <p class="text-sm text-red-600">{{ error }}</p>
+      <div v-else-if="error" class="rounded-xl bg-red-50 border border-red-200 dark:bg-red-950 dark:border-red-900 p-4">
+        <p class="text-sm text-red-600 dark:text-red-400">{{ error }}</p>
       </div>
 
       <!-- File list -->

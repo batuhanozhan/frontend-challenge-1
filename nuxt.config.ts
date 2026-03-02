@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   modules: ['@nuxt/ui', '@pinia/nuxt'],
   css: ['~/assets/css/main.css'],
   colorMode: {
-    preference: 'light',
+    preference: 'system',
     fallback: 'light',
     classSuffix: '',
   },

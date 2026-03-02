@@ -43,7 +43,7 @@
           class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 outline-none"
           :class="
             isActive
-              ? 'bg-emerald-50 text-emerald-700'
+              ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
               : 'text-muted hover:bg-panel-hover hover:text-highlighted'
           "
         >
