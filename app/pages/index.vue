@@ -58,6 +58,34 @@
       v-else-if="store.data"
       class="bg-panel rounded-2xl border border-panel-border overflow-hidden [box-shadow:var(--panel-shadow)]"
     >
+      <!-- Panel header -->
+      <div class="flex items-center justify-between px-6 pt-4 pb-3.5 border-b border-panel-divider">
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-sm font-semibold text-highlighted tracking-tight">
+              Daily Backup Chunks
+            </h2>
+            <span class="text-[11px] font-medium text-dimmed bg-panel-divider rounded-full px-2 py-0.5">
+              {{ dataDate }}
+            </span>
+          </div>
+          <p class="text-xs text-muted mt-0.5">
+            24 h × 60 min grid — darker cells mean more records backed up in that minute
+          </p>
+        </div>
+        <UTooltip
+          text="Select chunks using cells or row checkboxes, then use the toolbar to download or permanently delete them."
+          :ui="{ content: 'max-w-[220px] text-center' }"
+        >
+          <UButton
+            icon="i-heroicons-information-circle"
+            variant="ghost"
+            color="neutral"
+            size="xs"
+          />
+        </UTooltip>
+      </div>
+
       <!-- Toolbar -->
       <div class="flex items-center justify-between px-6 py-3 border-b border-panel-divider">
 
@@ -161,6 +189,14 @@
 const store        = useChunksStore()
 const downloadOpen = ref(false)
 const deleteOpen   = ref(false)
+
+const dataDate = computed(() => {
+  if (!store.data?.groups.length) return ''
+  const { year, month, day } = store.data.groups[0].date
+  return new Date(year, month - 1, day).toLocaleDateString('en-US', {
+    weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
+  })
+})
 
 onMounted(() => store.fetchChunks())
 </script>

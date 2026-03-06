@@ -60,5 +60,27 @@
         </button>
       </NuxtLink>
     </nav>
+
+    <!-- Divider -->
+    <div class="h-px mx-4 bg-panel-divider" />
+
+    <!-- How it works -->
+    <div class="px-4 py-4 space-y-2.5">
+      <p class="text-[10px] font-semibold uppercase tracking-[0.08em] text-dimmed">
+        How it works
+      </p>
+      <div class="flex items-start gap-2">
+        <UIcon name="i-heroicons-table-cells" class="w-3.5 h-3.5 text-dimmed flex-shrink-0 mt-px" />
+        <p class="text-[11px] text-muted leading-relaxed">
+          Each cell is one backup chunk (1-minute slot). 24 h × 60 min = 1,440 chunks per day.
+        </p>
+      </div>
+      <div class="flex items-start gap-2">
+        <UIcon name="i-heroicons-cursor-arrow-ripple" class="w-3.5 h-3.5 text-dimmed flex-shrink-0 mt-px" />
+        <p class="text-[11px] text-muted leading-relaxed">
+          Click a cell or a row checkbox to select chunks, then download or delete from the toolbar.
+        </p>
+      </div>
+    </div>
   </aside>
 </template>
