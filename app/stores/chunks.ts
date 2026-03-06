@@ -10,6 +10,9 @@ export const useChunksStore = defineStore('chunks', () => {
   /** "hour:minute" keys for selected buckets */
   const selectedKeys = ref<Set<string>>(new Set())
 
+  /** true while a bulk selection operation (select-all / hour toggle) is in progress */
+  const isSelecting = ref(false)
+
   // ── Getters ────────────────────────────────────────────────────
   const selectedCount = computed(() => selectedKeys.value.size)
 
@@ -66,29 +69,33 @@ export const useChunksStore = defineStore('chunks', () => {
     else selectedKeys.value.add(key)
   }
 
-  function toggleHour(hour: number) {
-    if (!data.value) return
+  async function toggleHour(hour: number) {
+    if (!data.value || isSelecting.value) return
+    isSelecting.value = true
+    await nextTick() // let the spinner render before the DOM update
     const group = data.value.groups.find(g => g.date.hour === hour)
-    if (!group) return
-    const nonEmpty = group.buckets.filter(b => b.dataCount > 0)
-    const allSelected = nonEmpty.every(b =>
-      selectedKeys.value.has(bucketKey(hour, b.date.minute!))
-    )
-    // Build next Set in one pass, then assign once → single reactivity trigger
-    const next = new Set(selectedKeys.value)
-    for (const bucket of nonEmpty) {
-      const key = bucketKey(hour, bucket.date.minute!)
-      allSelected ? next.delete(key) : next.add(key)
+    if (group) {
+      const nonEmpty = group.buckets.filter(b => b.dataCount > 0)
+      const allSelected = nonEmpty.every(b =>
+        selectedKeys.value.has(bucketKey(hour, b.date.minute!))
+      )
+      const next = new Set(selectedKeys.value)
+      for (const bucket of nonEmpty) {
+        const key = bucketKey(hour, bucket.date.minute!)
+        allSelected ? next.delete(key) : next.add(key)
+      }
+      selectedKeys.value = next
     }
-    selectedKeys.value = next
+    isSelecting.value = false
   }
 
-  function toggleSelectAll() {
-    if (!data.value) return
+  async function toggleSelectAll() {
+    if (!data.value || isSelecting.value) return
+    isSelecting.value = true
+    await nextTick() // let the spinner render before the DOM update
     if (isAllSelected.value) {
       selectedKeys.value = new Set()
     } else {
-      // Build entire selection in one pass, assign once → single reactivity trigger
       const next = new Set<string>()
       for (const group of data.value.groups)
         for (const bucket of group.buckets)
@@ -96,6 +103,7 @@ export const useChunksStore = defineStore('chunks', () => {
             next.add(bucketKey(group.date.hour, bucket.date.minute!))
       selectedKeys.value = next
     }
+    isSelecting.value = false
   }
 
   function clearSelection() {
@@ -205,7 +213,7 @@ export const useChunksStore = defineStore('chunks', () => {
 
   return {
     // state
-    data, loading, error, selectedKeys,
+    data, loading, error, selectedKeys, isSelecting,
     // getters
     selectedCount, isAllSelected, selectedDates, selectedSummary,
     // actions
