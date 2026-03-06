@@ -31,6 +31,27 @@
     0 0 0 1px rgba(0, 0, 0, 0.04);
 }
 
+.dark {
+  --canvas:         oklch(13% 0 0);
+  --panel:          oklch(17% 0 0);
+  --panel-border:   oklch(27% 0 0);
+  --panel-divider:  oklch(22% 0 0);
+  --panel-hover:    oklch(21% 0 0);
+
+  --panel-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+  --sidebar-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+  --navbar-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+
+  /* Boş heatmap hücresi dark modda koyu yeşilimsi */
+  --heat-0: oklch(22% 0.012 155);
+}
+
 /* Tailwind utility class'larına bağla */
 @theme inline {
   --color-canvas:         var(--canvas);
