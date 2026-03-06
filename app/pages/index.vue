@@ -136,7 +136,11 @@
         </div>
 
         <!-- Action buttons (visible when selection active) -->
-        <div v-if="store.selectedCount > 0" class="flex items-center gap-2">
+        <div
+          class="flex items-center gap-2"
+          :class="store.selectedCount === 0 ? 'invisible pointer-events-none' : ''"
+          :aria-hidden="store.selectedCount === 0"
+        >
           <UButton
             size="xs"
             variant="soft"

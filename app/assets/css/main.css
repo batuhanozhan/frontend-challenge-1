@@ -1,6 +1,11 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
+/* Prevent viewport width shift when scrollbar appears/disappears */
+html {
+  scrollbar-gutter: stable;
+}
+
 /* ─── App Design Tokens ──────────────────────────────────────────
    Renkleri sadece buradan yönet.
    Komponentler bg-canvas, bg-panel, border-panel-border gibi
